@@ -1,0 +1,64 @@
+// Topological sort
+#include <iostream>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+enum Color
+{
+    WHITE,
+    GRAY,
+    BLACK
+};
+
+void DFS(int v, int adj[6][6], vector<Color> &color, stack<int> &Stack, int V)
+{
+    color[v] = GRAY;
+    for (int u = 0; u < V; u++)
+    {
+        if (adj[v][u] && color[u] == WHITE)
+        {
+            DFS(u, adj, color, Stack, V);
+        }
+    }
+    color[v] = BLACK;
+    Stack.push(v);
+}
+
+void topologicalSort(int adj[6][6], int V)
+{
+    stack<int> Stack;
+    vector<Color> color(V, WHITE);
+
+    for (int i = 0; i < V; i++)
+    {
+        if (color[i] == WHITE)
+        {
+            DFS(i, adj, color, Stack, V);
+        }
+    }
+
+    cout << "Topological Sort Order:\n";
+    while (!Stack.empty())
+    {
+        cout << Stack.top() << " ";
+        Stack.pop();
+    }
+}
+
+int main()
+{
+    int V = 6;
+    int adj[6][6] = {
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 1, 0, 0},
+        {0, 0, 0, 1, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {1, 1, 0, 0, 0, 0},
+        {0, 0, 1, 0, 1, 0}};
+
+    topologicalSort(adj, V);
+
+    return 0;
+}
